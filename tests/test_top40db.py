@@ -1,10 +1,47 @@
-
 import os
+import sys
+sys.path.append("/home/mharinga/Documents/git-repos/top40/src")
+import top40db
+import sqlite3
 
-def unit_createDatabase():
+def test_createDatabase():
+	#create database then check if it exists in the directory
+	top40db.createDatabase();
 	
+	#check to see if all the tables are there
+	con = sqlite3.connect('top40.db')
+#	con.execute(".tables;")
+	cursor = con.cursor()
+	cursor.execute("SELECT name FROM sqlite_master;")
+	print(cursor.fetchall())
+
+	#check to see if all the columns are there
+
+def printDatabaseTables():
+
+	print 'ARTIST TABLE'
+	con = sqlite3.connect('top40.db')
+	cursor = con.cursor()
+	cursor.execute("SELECT * FROM ARTIST")#(?)",(table,))
+	print(cursor.fetchall())
+
+	print 'SONG TABLE'
+        cursor.execute("SELECT * FROM SONG")#(?)",(table,))
+        print(cursor.fetchall())	
 
 
+def test_addSong():
+	# call the add song function and give good inputs
+	top40db.addSong("K.Lee", "Two Eyes Open")
+	top40db.addSong("NIN", "Head Like A Hole")
+	
+	printDatabaseTables()
+
+
+
+
+test_createDatabase();
+test_addSong();
 
 
 
