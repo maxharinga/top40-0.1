@@ -29,22 +29,31 @@ def printDatabaseTables():
         cursor.execute("SELECT * FROM SONG")#(?)",(table,))
         print(cursor.fetchall())	
 
-
-def test_addSong():
-	# call the add song function and give good inputs
-	top40db.addSong("K.Lee", "Two Eyes Open")
-	top40db.addSong("NIN", "Head Like A Hole")
+	print 'top40 TABLE'
+        cursor.execute("SELECT * FROM TOP40")#(?)",(table,))
+        print(cursor.fetchall())
 	
+
+
+def test_addRecord():
+	# call the add song function and give good inputs
+	print 'About to test addSong...'
+	top40db.addRecord("K.Lee", "Two Eyes Open",4,"Oct 7")
+	printDatabaseTables()
+	print 'Finished test.'
+
+def test_addRecordDuplicate():
+	top40db.addRecord("Foo Fighters", "Times Like These",2, "Nov 11")
+	top40db.addRecord("Foo Fighters", "Times Like These",2, "Nov 18")
 	printDatabaseTables()
 
 
 
-
 test_createDatabase();
-test_addSong();
+test_addRecord();
+test_addRecordDuplicate();
 
 
 
-
-
+	
 

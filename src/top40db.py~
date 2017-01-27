@@ -35,7 +35,7 @@ def checkEntriesByYear(year):
 	entries = []
 	for i in range(11):
 		entries.append(checkEntriesByMonth(i+1,year))
-	print entries
+	print entries(1)
 
 def addRecord(artist, title, number, week):
 	

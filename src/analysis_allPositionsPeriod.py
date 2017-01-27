@@ -1,0 +1,36 @@
+import allPositionsPeriod
+from datetime import date,datetime, timedelta
+import matplotlib.pyplot as plt
+import numpy
+
+def getPositionScore(position, model):
+	if model ==1:
+		numPositions = len(position)
+		positions = numpy.linspace(1,numPositions,numPositions)
+		scores = 2/(1+numpy.exp(0.30*(positions -1)))				
+		result = numpy.dot(position,scores)		
+	return result
+
+weeks = allPositionsPeriod.createWeeks(date(2016,01,02), date(2016,12,31))
+data = allPositionsPeriod.getArtistData(weeks)
+artistScores = numpy.full((len(data[0]),1),0)
+
+for x in range(0,len(data[0])):
+	artistScores[x] = getPositionScore(data[1][x],1)
+	
+sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
+indices = numpy.arange(len(artistScores))
+width = 1
+
+sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
+sortedScores = artistScores[sortedIndices]
+sortedArtists = numpy.transpose(data[0])[sortedIndices]
+
+plt.bar(indices, sortedScores,width)
+plt.xticks(indices + width*0.5, sortedArtists,rotation='vertical', fontsize='small')
+plt.xlabel
+plt.show()
+
+
+
+
