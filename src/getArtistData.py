@@ -37,11 +37,13 @@ def getArtistData(weeks):
 		spot = each[1] - 1
 		periodPos[index,spot] += 1
 	return [artists, periodPos]
+
 def weekConvert(week):
 	d = week.decode('utf-8')
 	d = StringIO(d)
 	date = numpy.loadtxt(d, delimiter='-',converters={0:strpdate2num('%B %d, %Y')})
 	return date
+
 def plotArtistWeeklyData(data, weeks,artists):
 	weeks4Plot = []
 	numArtists = len(data)
@@ -59,4 +61,33 @@ def plotArtistWeeklyData(data, weeks,artists):
 	axes.set_ylim([40,0.5])
 	plt.legend(loc='upper right')
 	plt.show()
+
+def getPositionScore(position, model):
+#assign score to number of counts in rankings
+	if model ==1:
+		numPositions = len(position)
+		positions = numpy.linspace(1,numPositions,numPositions)
+		scores = 2/(1+numpy.exp(0.30*(positions -1)))				
+		result = numpy.dot(position,scores)		
+	return result
+
+def getScoredData(data):
+	artistScores = numpy.full((len(data[0]),1),0)
+	for x in range(0,len(data[0])):
+		artistScores[x] = getPositionScore(data[1][x],1)
+	return artistScores
+
+def plotScoredData(artistScores,data):
+	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
+	indices = numpy.arange(len(artistScores))
+	width = 1
+	sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
+	sortedScores = artistScores[sortedIndices]
+	sortedArtists = numpy.transpose(data[0])[sortedIndices]
+	plt.bar(indices, sortedScores,width)
+	plt.xticks(indices + width*0.5, sortedArtists,rotation='vertical', fontsize='small')
+	plt.xlabel
+	plt.show()
+
+
 

@@ -32,5 +32,7 @@ def peakHits(band, yearStart, yearEnd):
 
 def artistCompare():
 	artists = ['Pharrell', 'Rihanna', 'Ellie Goulding']
+
+peakHits('Rihanna', 2010,2016)
 	
 

@@ -13,11 +13,7 @@ def peakHits(band, yearStart, yearEnd):
 	
 	# for each year, find the set of artists who made top 40
 	for each in years:
-        	#cursor.execute("SELECT COUNT(WEEK) FROM TOP40 WHERE \
-		#	ARTIST=? AND POSITION=1",('%' + str(band) + '%', ) )
-		#cursor.execute("SELECT COUNT(WEEK) FROM TOP40 WHERE \
-	#		ARTIST = ?, AND POSITION=1	\
- 	#		AND WEEK LIKE ?",('%'+str(band)+'%','%'+str(each)+'%'),)			
+			
 		cursor.execute("SELECT COUNT(WEEK) FROM TOP40 WHERE \
 			ARTIST LIKE ? AND POSITION=1 AND WEEK LIKE ?", \
 			('%'+str(band)+'%', '%'+str(each)+'%', ))		

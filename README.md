@@ -11,3 +11,8 @@ Also, sqliteBrowser is an awesome tool that can be used to quickly check out wha
 For source code, please use the src folder.
 
 Enjoy.
+
+Main classes:
+-dbManager: manage databases for top40
+-webScraper: grab data from website
+-reportGenerator

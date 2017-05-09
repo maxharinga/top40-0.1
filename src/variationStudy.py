@@ -17,6 +17,12 @@ def artistVariation(yearStart, yearEnd):
 			TOP40 WHERE WEEK LIKE ?",('%' + str(each) + '%', ) )			
 		numArtists.append(cursor.fetchall())
 	
+	conn.close()	
+
+	return [years,numArtists]
+
+
+def plt_artistVariation(years, numArtists):
 	plt.scatter(years,numArtists)
 	plt.grid(True)
 	ax = plt.gca()
@@ -25,7 +31,6 @@ def artistVariation(yearStart, yearEnd):
 	plt.ylabel('# of unique artists')
 	plt.suptitle('# of Unique Artists on AM TOP 40 By Year')
 	plt.show()
-	return [years,numArtists]
 
-
-#def topArtistByPeriod(periodStart, periodEnd)
+[years, numArtists] = artistVariation(2010,2016)
+plt_artistVariation(years, numArtists)

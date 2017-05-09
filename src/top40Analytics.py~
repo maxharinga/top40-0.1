@@ -13,9 +13,16 @@ def artistVariation(yearStart, yearEnd):
 	
 	# for each year, find the set of artists who made top 40
 	for each in years:
-        	cursor.execute("SELECT COUNT(DISTINCT ARTIST) FROM TOP40 WHERE WEEK LIKE ?",('%' + str(each) + '%', ) )			
+        	cursor.execute("SELECT COUNT(DISTINCT ARTIST) FROM \
+			TOP40 WHERE WEEK LIKE ?",('%' + str(each) + '%', ) )			
 		numArtists.append(cursor.fetchall())
 	
+	conn.close('top40.db')	
+
+	return [years,numArtists]
+
+
+def plt_artistVariation(years, numArtists):
 	plt.scatter(years,numArtists)
 	plt.grid(True)
 	ax = plt.gca()
@@ -24,7 +31,6 @@ def artistVariation(yearStart, yearEnd):
 	plt.ylabel('# of unique artists')
 	plt.suptitle('# of Unique Artists on AM TOP 40 By Year')
 	plt.show()
-	return [years,numArtists]
 
-
-#def topArtistByPeriod(periodStart, periodEnd)
+[years, numArtists] = artistVariation(2010,2016)
+plt_artistVariation(years, numArtists)
