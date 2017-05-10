@@ -69,8 +69,10 @@ def getScores(positions):
 def plotScoreModel():
 	x = numpy.linspace(1,40,100) # 100 linearly spaced numbers
 	y = getScores(x)
-	pylab.plot(x,y) 
-	pylab.show() 
+	#pylab.plot(x,y) 
+	#pylab.show() 
+	plt.plot(x,y)
+	plt.show()
 
 def getPositionScore(counts_per_position):
 #assign score to number of counts in rankings
@@ -100,5 +102,4 @@ def plotScoredData(artistScores,data):
 	plt.xlabel
 	plt.show()
 
-plotScoreModel()
 

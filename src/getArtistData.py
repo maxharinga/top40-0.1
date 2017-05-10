@@ -5,7 +5,6 @@ import numpy
 from datetime import date,datetime, timedelta
 from io import StringIO
 from matplotlib.dates import strpdate2num
-import pylab
 
 def createWeeks(startWeek, endWeek):
 #generate weeks data structure for time period of interest
@@ -69,8 +68,8 @@ def getScores(positions):
 def plotScoreModel():
 	x = numpy.linspace(1,40,100) # 100 linearly spaced numbers
 	y = getScores(x)
-	pylab.plot(x,y) 
-	pylab.show() 
+	plt.plot(x,y)
+	plt.show()
 
 def getPositionScore(counts_per_position):
 #assign score to number of counts in rankings
