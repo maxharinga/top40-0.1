@@ -12,3 +12,4 @@ getArtistData.plotScoredData(artistScores, data)
 
 
 
+

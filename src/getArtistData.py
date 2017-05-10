@@ -18,7 +18,7 @@ def createWeeks(startWeek, endWeek):
 
 def getArtistData(weeks):
 #for each artist, return matrix of counts @ a certain position 
-	conn = sqlite3.connect('top40.db')
+	conn = sqlite3.connect('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/src/top40.db')
 	cursor = conn.cursor()
 	sql="select distinct artist from top40 where week in ({seq})" \
 		.format(seq=','.join(['?']*len(weeks)))
@@ -44,13 +44,14 @@ def weekConvert(week):
 	date = numpy.loadtxt(d, delimiter='-',converters={0:strpdate2num('%B %d, %Y')})
 	return date
 
-def plotArtistWeeklyData(data, weeks,artists):
+def plotArtistWeeklyData(data, weeks):
 	weeks4Plot = []
-	numArtists = len(data)
+	num_unique_artists = len(data[0])
+	artists = data[0]
 	for each in weeks:
 		c = weekConvert(each)
 		weeks4Plot.append(c)
-	for x in range (0, numArtists):
+	for x in range (0, num_unique_artists):
 		plt.plot_date(weeks4Plot, data[x,:],'-b',\
 			c=numpy.random.rand(3,), label = artists[x])
 	plt.title("Top40 Results by Artist")
@@ -60,6 +61,20 @@ def plotArtistWeeklyData(data, weeks,artists):
 	axes.set_axis_bgcolor('black')
 	axes.set_ylim([40,0.5])
 	plt.legend(loc='upper right')
+	plt.show()
+
+def plotCountedPositions(data):
+	artists = data[0]
+	plt.figure(figsize=(10,34))
+	plt.imshow(data[1])
+	plt.xlim([0,40])
+	plt.xlabel('Top 40 Position')
+	indices = numpy.arange(len(artists))
+	width = 1
+	plt.yticks(indices + width*0.0, artists,fontsize=8)
+	fig = plt.gcf()
+	fig.subplots_adjust(left=0.2,top=0.97, bottom=0.05)
+	plt.colorbar(aspect=50)
 	plt.show()
 
 def getScores(positions):
