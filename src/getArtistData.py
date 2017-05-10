@@ -5,6 +5,7 @@ import numpy
 from datetime import date,datetime, timedelta
 from io import StringIO
 from matplotlib.dates import strpdate2num
+import pylab
 
 def createWeeks(startWeek, endWeek):
 #generate weeks data structure for time period of interest
@@ -62,19 +63,29 @@ def plotArtistWeeklyData(data, weeks,artists):
 	plt.legend(loc='upper right')
 	plt.show()
 
-def getPositionScore(position, model):
+def getScores(positions):
+	return 2/(1+numpy.exp(0.30*(positions -1)))
+
+def plotScoreModel():
+	x = numpy.linspace(1,40,100) # 100 linearly spaced numbers
+	y = getScores(x)
+	pylab.plot(x,y) 
+	pylab.show() 
+
+def getPositionScore(counts_per_position):
 #assign score to number of counts in rankings
-	if model ==1:
-		numPositions = len(position)
-		positions = numpy.linspace(1,numPositions,numPositions)
-		scores = 2/(1+numpy.exp(0.30*(positions -1)))				
-		result = numpy.dot(position,scores)		
+	number_of_positions = len(counts_per_position)
+	positions = numpy.linspace(1,number_of_positions,number_of_positions)
+	scores = getScores(positions)				
+	result = numpy.dot(counts_per_position,scores)		
 	return result
 
 def getScoredData(data):
-	artistScores = numpy.full((len(data[0]),1),0)
-	for x in range(0,len(data[0])):
-		artistScores[x] = getPositionScore(data[1][x],1)
+	num_unique_artists = len(data[0])
+	counts_per_position = data[1]
+	artistScores = numpy.full((num_unique_artists,1),0)
+	for x in range(0,num_unique_artists):
+		artistScores[x] = getPositionScore(counts_per_position[x])
 	return artistScores
 
 def plotScoredData(artistScores,data):
@@ -88,6 +99,5 @@ def plotScoredData(artistScores,data):
 	plt.xticks(indices + width*0.5, sortedArtists,rotation='vertical', fontsize='small')
 	plt.xlabel
 	plt.show()
-
 
 
