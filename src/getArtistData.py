@@ -6,6 +6,10 @@ from datetime import date,datetime, timedelta
 from io import StringIO
 from matplotlib.dates import strpdate2num
 
+def getNextWeek(startWeek):
+	t = timedelta((12 - startWeek.weekday()) % 7)
+	return (startWeek + t)	
+
 def createWeeks(startWeek, endWeek):
 #generate weeks data structure for time period of interest
 	weeks = []
@@ -44,26 +48,7 @@ def weekConvert(week):
 	date = numpy.loadtxt(d, delimiter='-',converters={0:strpdate2num('%B %d, %Y')})
 	return date
 
-def plotArtistWeeklyData(data, weeks):
-	weeks4Plot = []
-	num_unique_artists = len(data[0])
-	artists = data[0]
-	for each in weeks:
-		c = weekConvert(each)
-		weeks4Plot.append(c)
-	for x in range (0, num_unique_artists):
-		plt.plot_date(weeks4Plot, data[x,:],'-b',\
-			c=numpy.random.rand(3,), label = artists[x])
-	plt.title("Top40 Results by Artist")
-	plt.ylabel("Top Position")
-	plt.gca().invert_yaxis()
-	axes = plt.gca()
-	axes.set_axis_bgcolor('black')
-	axes.set_ylim([40,0.5])
-	plt.legend(loc='upper right')
-	plt.show()
-
-def plotCountedPositions(data):
+def plotCountedPositions(data, weekStart, weekEnd,display):
 	artists = data[0]
 	plt.figure(figsize=(10,34))
 	plt.imshow(data[1])
@@ -73,9 +58,13 @@ def plotCountedPositions(data):
 	width = 1
 	plt.yticks(indices + width*0.0, artists,fontsize=8)
 	fig = plt.gcf()
+	plotName = str(weekStart) + ' - ' + str(weekEnd)
+	plt.title(plotName)
 	fig.subplots_adjust(left=0.2,top=0.97, bottom=0.05)
 	plt.colorbar(aspect=50)
-	plt.show()
+	plt.savefig('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/images/' + plotName + '.png')
+	if display == 1:	
+		plt.show()
 
 def getScores(positions):
 	return 2/(1+numpy.exp(0.30*(positions -1)))

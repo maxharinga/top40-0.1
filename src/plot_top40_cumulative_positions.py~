@@ -1,0 +1,22 @@
+import getArtistData
+from datetime import date,datetime, timedelta
+import matplotlib.pyplot as plt
+import numpy
+
+def plot_top40_cumulative_positions():
+	weeks = allPositionsPeriod.createWeeks(date(2016,01,02), date(2016,12,31))
+	data = allPositionsPeriod.getArtistData(weeks)
+	artists = data[0]
+	plt.figure(figsize=(10,34))
+	plt.imshow(data[1])
+	plt.xlim([0,40])
+	plt.xlabel('Top 40 Position')
+	indices = numpy.arange(len(artists))
+	width = 1
+	plt.yticks(indices + width*0.0, artists,fontsize=8)
+	fig = plt.gcf()
+	fig.subplots_adjust(left=0.2,top=0.97, bottom=0.05)
+	plt.colorbar(aspect=50)
+	plt.show()
+
+plot_top40_cumulative_positions()

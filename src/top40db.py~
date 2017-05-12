@@ -7,7 +7,7 @@ def killDatabase():
 
 def checkEntriesByMonth(month, year):
 	entries = []
-	conn = sqlite3.connect('top40.db')
+	conn = sqlite3.connect('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/src/top40.db')
 	cursor = conn.cursor()
 	
 	months = {
@@ -26,7 +26,7 @@ def checkEntriesByMonth(month, year):
 	}	
 	stringMonth = months[month]
 	#see if the month and year are in the database
-	cursor.execute("SELECT COUNT(WEEK) FROM TOP40 WHERE WEEK LIKE ?",('%' + stringMonth + '%' +  str(year) + '%', ) )			
+	cursor.execute("SELECT DISTINCT(WEEK) FROM TOP40 WHERE WEEK LIKE ?",('%' + stringMonth + '%' +  str(year) + '%', ) )			
 	
 	entries.append(cursor.fetchall())
 	return entries
@@ -35,7 +35,7 @@ def checkEntriesByYear(year):
 	entries = []
 	for i in range(11):
 		entries.append(checkEntriesByMonth(i+1,year))
-	print entries(1)
+	print entries
 
 def addRecord(artist, title, number, week):
 	

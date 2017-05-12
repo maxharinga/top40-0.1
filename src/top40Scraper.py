@@ -18,7 +18,7 @@ def getMonthData(month, year):
 	#returns a set of weeks in a given month, as a set of string identifiers
 	
 	# create string for URL
-	#first check to make sure that the yearand month make sense
+	#first check to make sure that the year and month make sense
 	if(dateOkay(month, year) == 0 ):	
 			oldMonth = month
 			month = str(month)
@@ -33,6 +33,7 @@ def getMonthData(month, year):
 	URL = 'http://www.at40.com/top-40/'+ year + '/'+month
 	links = []
 	weeks = []
+	print URL
 	webpage = urllib2.urlopen(URL)
 	soup = BeautifulSoup(webpage)
 	links = []

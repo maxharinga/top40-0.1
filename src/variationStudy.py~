@@ -29,7 +29,7 @@ def plt_artistVariation(years, numArtists):
 	ax.ticklabel_format(useOffset=False)
 	plt.xlabel('Year')
 	plt.ylabel('# of unique artists')
-	plt.suptitle('Unique Artists on America\'s Top 40')
+	plt.suptitle('# of Unique Artists on America\'s Top 40')
 	plt.show()
 
 #[years, numArtists] = artistVariation(2009,2015)

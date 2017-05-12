@@ -3,7 +3,8 @@ sys.path.insert(0, '/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/s
 import getArtistData
 from datetime import date,datetime, timedelta
 
-
-weeks = getArtistData.createWeeks(date(2016,10,02), date(2016,12,31))
+weeks = getArtistData.createWeeks(date(2014,01,04), date(2014,12,31))
+weekStart = weeks[0]
+weekEnd = weeks[-1]
 data = getArtistData.getArtistData(weeks)
-getArtistData.plotCountedPositions(data)
+getArtistData.plotCountedPositions(data,weekStart,weekEnd)
