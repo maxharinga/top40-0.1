@@ -4,7 +4,7 @@ import getArtistData
 from datetime import date,datetime, timedelta
 
 for x in range(2003,2016):
-	start = getArtistData.getClosestStartWeek(date(x,01,01))
+	start = getArtistData.getNextWeek(date(x,01,01))
 	weeks = getArtistData.createWeeks(start, date(x,12,31))
 	weekStart = weeks[0]
 	weekEnd = weeks[-1]

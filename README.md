@@ -17,6 +17,11 @@ Main classes:
 -webScraper: grab data from website
 -reportGenerator
 
+-who are the massively popular artists over the past 15 years?
+	-
+-what is the half life of an artist?
+-what is the half life of a single?
+
 -does an artist with really high position counts have many weeks leading up to this?
 -what makes massive pop songs stand out?
 	-lyrical themes?

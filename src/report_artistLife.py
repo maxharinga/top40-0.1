@@ -30,9 +30,6 @@ def peakHits(band, yearStart, yearEnd):
 	plt.show()
 	return [years,yearList]
 
-def artistCompare():
-	artists = ['Pharrell', 'Rihanna', 'Ellie Goulding']
-
-peakHits('Rihanna', 2010,2016)
+peakHits('Maroon 5', 2003,2015)
 	
 

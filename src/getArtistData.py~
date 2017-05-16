@@ -6,7 +6,7 @@ from datetime import date,datetime, timedelta
 from io import StringIO
 from matplotlib.dates import strpdate2num
 
-def getClosestStartWeek(startWeek):
+def getNextWeek(startWeek):
 	t = timedelta((12 - startWeek.weekday()) % 7)
 	return (startWeek + t)	
 
@@ -48,7 +48,7 @@ def weekConvert(week):
 	date = numpy.loadtxt(d, delimiter='-',converters={0:strpdate2num('%B %d, %Y')})
 	return date
 
-def plotCountedPositions(data, weekStart, weekEnd,display):
+def plotCountedPositions(data, weekStart, weekEnd,display,save):
 	artists = data[0]
 	plt.figure(figsize=(10,34))
 	plt.imshow(data[1])
@@ -91,16 +91,35 @@ def getScoredData(data):
 		artistScores[x] = getPositionScore(counts_per_position[x])
 	return artistScores
 
-def plotScoredData(artistScores,data):
+def getSortedData(data,artistScores):
 	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
 	indices = numpy.arange(len(artistScores))
-	width = 1
 	sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
 	sortedScores = artistScores[sortedIndices]
 	sortedArtists = numpy.transpose(data[0])[sortedIndices]
+		
+	return [sortedArtists, sortedArtistScores]
+
+def plotScoredData(artistScores,data,weekStart,weekEnd, display,save):
+	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
+	indices = numpy.arange(len(artistScores))
+	width = 1
+	plt.figure(figsize=(80,30))
+	plt.subplots_adjust(bottom=0.5)
+	sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
+	sortedScores = artistScores[sortedIndices]
+	sortedArtists = numpy.transpose(data[0])[sortedIndices]
+	plotName = str(weekStart) + ' - ' + str(weekEnd)
+	plt.title(plotName)
 	plt.bar(indices, sortedScores,width)
+	ax = plt.axes()
+	ax.yaxis.grid()
+	ax.grid(which='major', alpha=0.5) 
 	plt.xticks(indices + width*0.5, sortedArtists,rotation='vertical', fontsize='small')
 	plt.xlabel
-	plt.show()
+	if save == 1:	
+		plt.savefig('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/images/Scored: ' + plotName + '.png')
+	if display == 1:	
+		plt.show()
 
 
