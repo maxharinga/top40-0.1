@@ -3,8 +3,12 @@ import matplotlib.pyplot as plt
 from numpy.random import rand
 import numpy
 from datetime import date,datetime, timedelta
+from matplotlib.dates import  DateFormatter
 from io import StringIO
 from matplotlib.dates import strpdate2num
+import getArtistData
+
+import matplotlib.dates as mdates
 
 def getNextWeek(startWeek):
 	t = timedelta((12 - startWeek.weekday()) % 7)
@@ -20,34 +24,50 @@ def createWeeks(startWeek, endWeek):
 		week += delta
 	return weeks
 
-def getArtistData(weeks):
-#for each artist, return matrix of counts @ a certain position 
+def plotArtistHitsOverTime(artist,hits,display,save):
+	sorted_weeks = hits[1]
+	sorted_scores = hits[0]
+	plt.figure(figsize=(20,5))
+	plt.plot_date(sorted_weeks,sorted_scores)
+	plotName = 'Relative Scores of ' + artist 	
+	plt.title(plotName)
+	plt.xlabel('Time')
+	ax = plt.axes()
+	ax.xaxis.set_major_locator(mdates.YearLocator())
+	ax.xaxis.set_minor_locator(mdates.MonthLocator())
+
+	if save == 1:	
+		plt.savefig('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/images/artistOverTime/' + plotName + '.svgz')
+	if display == 1:	
+		plt.show()
+
+def scoreRecords(records):
+	weeks = []
+	scores = []
+	number_of_records = len(records)
+	for i in range(0, number_of_records):
+		score = getScores(records[i][0])
+		this_week = getArtistData.weekConvert(records[i][1])
+		if this_week in weeks:
+			scores[weeks.index(this_week)] += score
+		else:
+			weeks.append(this_week)
+			scores.append(score)	
+	sorted_indices = numpy.argsort(weeks)	
+	sorted_weeks = [weeks[i] for i in sorted_indices]
+	sorted_scores = [scores[i] for i in sorted_indices]	
+	return [sorted_scores, sorted_weeks]
+		
+def getArtistHitsOverTime(artist, weeks): 
 	conn = sqlite3.connect('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/src/top40.db')
 	cursor = conn.cursor()
-	sql="select distinct artist from top40 where week in ({seq})" \
-		.format(seq=','.join(['?']*len(weeks)))
-	cursor.execute(sql, weeks)
-	result =  cursor.fetchall()
-	artists = []
-	for each in result:
-		artists.append(each[0])	
-	sql="select * from top40 where week in ({seq})" \
-		.format(seq=','.join(['?']*len(weeks)))
-	cursor.execute(sql, weeks)
+	cursor.execute('SELECT * FROM top40 WHERE ARTIST=?', (artist,))
 	data =  cursor.fetchall()
-	periodPos = numpy.full((len(artists),50),0)	
+	records = []
 	for each in data:
-		index = artists.index(each[3])
-		spot = each[1] - 1
-		periodPos[index,spot] += 1
-	return [artists, periodPos]
-
-def weekConvert(week):
-	d = week.decode('utf-8')
-	d = StringIO(d)
-	date = numpy.loadtxt(d, delimiter='-',converters={0:strpdate2num('%B %d, %Y')})
-	return date
-
+		records.append([each[1], each[4]])
+	return records	
+	
 def plotCountedPositions(data, weekStart, weekEnd,display,save):
 	artists = data[0]
 	plt.figure(figsize=(10,34))
@@ -70,12 +90,6 @@ def plotCountedPositions(data, weekStart, weekEnd,display,save):
 def getScores(positions):
 	return 2/(1+numpy.exp(0.30*(positions -1)))
 
-def plotScoreModel():
-	x = numpy.linspace(1,40,100) # 100 linearly spaced numbers
-	y = getScores(x)
-	plt.plot(x,y)
-	plt.show()
-
 def getPositionScore(counts_per_position):
 #assign score to number of counts in rankings
 	number_of_positions = len(counts_per_position)
@@ -83,23 +97,6 @@ def getPositionScore(counts_per_position):
 	scores = getScores(positions)				
 	result = numpy.dot(counts_per_position,scores)		
 	return result
-
-def getScoredData(data):
-	num_unique_artists = len(data[0])
-	counts_per_position = data[1]
-	artistScores = numpy.full((num_unique_artists,1),0)
-	for x in range(0,num_unique_artists):
-		artistScores[x] = getPositionScore(counts_per_position[x])
-	return artistScores
-
-def getSortedData(data,artistScores):
-	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
-	indices = numpy.arange(len(artistScores))
-	sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
-	sortedScores = artistScores[sortedIndices]
-	sortedArtists = numpy.transpose(data[0])[sortedIndices]
-		
-	return [sortedArtists, sortedArtistScores]
 
 def plotScoredData(artistScores,data,weekStart,weekEnd, display,save):
 	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)

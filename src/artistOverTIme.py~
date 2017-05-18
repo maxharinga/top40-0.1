@@ -20,7 +20,7 @@ def createWeeks(startWeek, endWeek):
 		week += delta
 	return weeks
 
-def getArtistData(weeks):
+def getArtistHitsOverTime(weeks):
 #for each artist, return matrix of counts @ a certain position 
 	conn = sqlite3.connect('/home/mharinga/Documents/git-repos/top40-0.1.git/top40-0.1/src/top40.db')
 	cursor = conn.cursor()
@@ -70,12 +70,6 @@ def plotCountedPositions(data, weekStart, weekEnd,display,save):
 def getScores(positions):
 	return 2/(1+numpy.exp(0.30*(positions -1)))
 
-def plotScoreModel():
-	x = numpy.linspace(1,40,100) # 100 linearly spaced numbers
-	y = getScores(x)
-	plt.plot(x,y)
-	plt.show()
-
 def getPositionScore(counts_per_position):
 #assign score to number of counts in rankings
 	number_of_positions = len(counts_per_position)
@@ -91,15 +85,6 @@ def getScoredData(data):
 	for x in range(0,num_unique_artists):
 		artistScores[x] = getPositionScore(counts_per_position[x])
 	return artistScores
-
-def getSortedData(data,artistScores):
-	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
-	indices = numpy.arange(len(artistScores))
-	sortedIndices = numpy.argsort(-numpy.transpose(artistScores))[0]
-	sortedScores = artistScores[sortedIndices]
-	sortedArtists = numpy.transpose(data[0])[sortedIndices]
-		
-	return [sortedArtists, sortedArtistScores]
 
 def plotScoredData(artistScores,data,weekStart,weekEnd, display,save):
 	sortedArtistScores = -1*numpy.sort(-numpy.transpose(artistScores), axis = None)
